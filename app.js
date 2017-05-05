@@ -5,6 +5,14 @@ window.addEventListener('load', function() {
   content.style.display = 'block';
   loadingSpinner.style.display = 'none';
 
+  try {
+      if (!AUTH0_CLIENT_ID || !AUTH0_DOMAIN) {
+          alert('Make sure to set the AUTH0_CLIENT_ID and AUTH0_DOMAIN variables in auth0-variables.js.');
+      }
+  } catch(err) {
+      alert('Make sure to set the AUTH0_CLIENT_ID and AUTH0_DOMAIN variables in auth0-variables.js.');
+  }
+
   var apiUrl = 'http://localhost:3001/api';
 
   var lock = new Auth0Lock(AUTH0_CLIENT_ID, AUTH0_DOMAIN, {
