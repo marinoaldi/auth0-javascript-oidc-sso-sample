@@ -11,7 +11,7 @@ This sample is a mix of:
 
 1. Go to https://manage.auth0.com/#/clients and create a single-page application client with OIDC Conformant mode enabled
 2. Add `http://localhost:3000` and `http://localhost:3000/callback.html` as allowed callback URLs
-3. Enter your Auth0 domain and client ID in the [`auth0-variables.js`](/auth0-variables.js) file.
+3. Enter your Auth0 domain and client ID in the [`auth0-variables.js`](/app-spa/auth0-variables.js) file.
 
 ## Running the sample
 
@@ -38,7 +38,7 @@ Silent authentication works in the same way as regular authentication (i.e. redi
 * A `prompt=none` parameter is added to the redirect to `/authorize`.
 This causes Auth0 to return an error in case the user is not logged in via SSO instead of displaying a login page.
 * The redirect happens inside an iframe to preserve our application's state.
-* The callback URL of this request is set to [`callback.html`](/callback.html), which is a dedicated page to handle the silent authentication callback.
+* The callback URL of this request is set to [`callback.html`](/app-spa/callback.html), which is a dedicated page to handle the silent authentication callback.
 This avoids loading your entire application again inside an iframe.
 
 Two things can happen after a silent authentication request:
