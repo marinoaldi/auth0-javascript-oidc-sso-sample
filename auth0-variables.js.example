@@ -1,8 +1,9 @@
 const AUTH0_CLIENT_ID='{CLIENT_ID}';
 const AUTH0_DOMAIN='{DOMAIN}';
-const API_ID = '{AUDIENCE}';
 const AUTH0_CALLBACK_URL=location.href;
 const AUTH0_CALLBACK_SILENT_URL='http://localhost:3000/callback.html';
+const API_ID = '{AUDIENCE}';
+const API_URL = 'http://localhost:3001/api';
 
 const auth0js = new auth0.WebAuth({
     domain: AUTH0_DOMAIN,

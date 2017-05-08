@@ -13,8 +13,6 @@ window.addEventListener('load', function() {
       alert('Make sure to set the AUTH0_CLIENT_ID and AUTH0_DOMAIN variables in auth0-variables.js.');
   }
 
-  var apiUrl = 'http://localhost:3001/api';
-
 
   var homeView = document.getElementById('home-view');
   var profileView = document.getElementById('profile-view');
@@ -223,7 +221,7 @@ window.addEventListener('load', function() {
   }
 
   function callAPI(endpoint, secured) {
-    var url = apiUrl + endpoint;
+    var url = API_URL + endpoint;
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     if (secured) {
