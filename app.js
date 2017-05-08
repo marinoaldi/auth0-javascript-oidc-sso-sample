@@ -139,7 +139,7 @@ window.addEventListener('load', function() {
     // Check whether the current time is past the
     // access token's expiry time
     var expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    return new Date().getTime() < expiresAt;
+    return expiresAt < new Date().getTime();
   }
 
   function displayButtons() {
@@ -150,8 +150,13 @@ window.addEventListener('load', function() {
       loginBtn.style.display = 'none';
       renewBtn.style.display = 'inline-block';
       logoutBtn.style.display = 'inline-block';
-      loginStatus.innerHTML = `You are logged in! You can now view your admin area.
+      if(isExpired()){
+          loginStatus.innerHTML = `You are logged in! You can now view your admin area.
+                         <br><br>There is an expired access token in local storage. Click RENEW button to renew it</a>`;
+      } else {
+          loginStatus.innerHTML = `You are logged in! You can now view your admin area.
                          <br><br>There is an access token in local storage, and it expires on ${expirationDate}. Click RENEW button to renew it</a>`;
+      }
       profileViewBtn.style.display = 'inline-block';
       pingPrivate.style.display = 'inline-block';
       callPrivateMessage.style.display = 'none';
@@ -236,6 +241,7 @@ window.addEventListener('load', function() {
           xhr.responseText
         ).message;
       } else {
+        document.querySelector('#ping-view h2').innerHTML = xhr.statusText + " - Maybe access_token expired. Renew it!!"
         alert('Request failed: ' + xhr.statusText);
       }
     };
