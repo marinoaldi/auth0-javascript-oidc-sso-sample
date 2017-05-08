@@ -15,29 +15,6 @@ window.addEventListener('load', function() {
 
   var apiUrl = 'http://localhost:3001/api';
 
-  var lock = new Auth0Lock(AUTH0_CLIENT_ID, AUTH0_DOMAIN, {
-    oidcConformant: true,
-    autoclose: true,
-    auth: {
-      redirectUrl: AUTH0_CALLBACK_URL,
-      responseType: 'token id_token',
-      audience: API_ID,
-      params: {
-        scope: 'openid profile read:messages'
-      }
-    }
-  });
-
-  var userProfile;
-
-  lock.on('authenticated', function(authResult) {
-    if (authResult && authResult.accessToken && authResult.idToken) {
-      setSession(authResult);
-    } else if (authResult && authResult.error) {
-      alert('Error: ' + authResult.error);
-    }
-    displayButtons();
-  });
 
   var homeView = document.getElementById('home-view');
   var profileView = document.getElementById('profile-view');
@@ -46,6 +23,7 @@ window.addEventListener('load', function() {
 
   // buttons and event listeners
   var loginBtn = document.getElementById('btn-login');
+  var renewBtn = document.getElementById('btn-renew');
   var logoutBtn = document.getElementById('btn-logout');
 
   var homeViewBtn = document.getElementById('btn-home-view');
@@ -68,6 +46,7 @@ window.addEventListener('load', function() {
   });
 
   loginBtn.addEventListener('click', login);
+  renewBtn.addEventListener('click', renew);
   logoutBtn.addEventListener('click', logout);
 
   homeViewBtn.addEventListener('click', function() {
@@ -99,8 +78,38 @@ window.addEventListener('load', function() {
     adminView.style.display = 'inline-block';
   });
 
+
+  function renew() {
+      auth0js.renewAuth({
+          redirectUri: AUTH0_CALLBACK_SILENT_URL,
+          usePostMessage: true
+      }, function (err, result) {
+          if (err) {
+              alert(`Could not get a new token using silent authentication (${err.error}). Redirecting to login page...`);
+              auth0js.authorize();
+          } else {
+              saveAuthResult(result);
+          }
+      });
+  }
+
+  auth0js.parseHash(window.location.hash, function (err, result) {
+      if (err) {
+          console.error(err);
+          alert('Error: ' + error);
+          //displayButtons(); TODO MALCAIDE comprobar si es necesario o no
+      } else if (result) {
+          saveAuthResult(result);
+      }
+  });
+
+  function saveAuthResult (authResult) {
+      setSession(authResult);
+      displayButtons();
+  }
+
   function login() {
-    lock.show();
+    renew();
   }
 
   function setSession(authResult) {
@@ -118,11 +127,17 @@ window.addEventListener('load', function() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
+    localStorage.removeItem('profile');
     pingMessage.style.display = 'none';
     displayButtons();
   }
 
   function isAuthenticated() {
+      // Check whether access_token in localStorage
+      return !localStorage.getItem('access_token') ? false : true;
+  }
+
+  function isExpired() {
     // Check whether the current time is past the
     // access token's expiry time
     var expiresAt = JSON.parse(localStorage.getItem('expires_at'));
@@ -132,9 +147,13 @@ window.addEventListener('load', function() {
   function displayButtons() {
     var loginStatus = document.querySelector('.container h4');
     if (isAuthenticated()) {
+      const expirationDate = new Date(Number.parseInt(localStorage.getItem('expires_at')));
+
       loginBtn.style.display = 'none';
+      renewBtn.style.display = 'inline-block';
       logoutBtn.style.display = 'inline-block';
-      loginStatus.innerHTML = 'You are logged in! You can now view your admin area.';
+      loginStatus.innerHTML = `You are logged in! You can now view your admin area.
+                         <br><br>There is an access token in local storage, and it expires on ${expirationDate}. Click RENEW button to renew it</a>`;
       profileViewBtn.style.display = 'inline-block';
       pingPrivate.style.display = 'inline-block';
       callPrivateMessage.style.display = 'none';
@@ -145,6 +164,7 @@ window.addEventListener('load', function() {
       }
     } else {
       loginBtn.style.display = 'inline-block';
+      renewBtn.style.display = 'none';
       logoutBtn.style.display = 'none';
       profileViewBtn.style.display = 'none';
       profileView.style.display = 'none';
@@ -152,30 +172,46 @@ window.addEventListener('load', function() {
       adminView.style.display = 'none';
       pingPrivate.style.display = 'none';
       callPrivateMessage.style.display = 'block';
-      loginStatus.innerHTML = 'You are not logged in! Please log in to continue.';
+      loginStatus.innerHTML = 'You are not logged in! Please log in to continue.' +
+          '<br><br>There is no access token present in local storage, meaning that you are not logged in. Click LOGIN button to attempt an SSO login';
     }
   }
 
   function getProfile() {
+    var userProfile = localStorage.getItem('profile');
+
     if (!userProfile) {
       var accessToken = localStorage.getItem('access_token');
 
       if (!accessToken) {
         console.log('Access token must exist to fetch profile');
+        alert('Access token must exist to fetch profile');
       }
 
-      lock.getUserInfo(accessToken, function(err, profile) {
-        if (profile) {
-          userProfile = profile;
-          displayProfile();
-        }
+      auth0js.client.userInfo(accessToken, function(err, user) {
+          if (err) {
+              console.log('There was an error getting the userInfo: ' + JSON.stringify(err));
+              console.log(err);
+              alert('There was an error getting the userInfo: ' + JSON.stringify(err));
+              /*
+              if(err.code === 401) { // Unauthorized (Maybe access_token expired) TODO MALCAIDE comprobar si es necesario o no
+                  renewAuthorizeAPI();
+              } else {
+                  logout();
+              }*/
+          } else {
+              // Now you have the user's information
+              localStorage.setItem('profile', JSON.stringify(user));
+              displayProfile(user);
+          }
       });
+
     } else {
-      displayProfile();
+      displayProfile(JSON.parse(userProfile));
     }
   }
 
-  function displayProfile() {
+  function displayProfile(userProfile) {
     // display the profile
     document.querySelector(
       '#profile-view .nickname'
