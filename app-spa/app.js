@@ -22,7 +22,8 @@ window.addEventListener('load', function() {
   // buttons and event listeners
   var loginBtn = document.getElementById('btn-login');
   var renewBtn = document.getElementById('btn-renew');
-  var logoutBtn = document.getElementById('btn-logout');
+  var logoutLocallyBtn = document.getElementById('btn-logout-locally');
+  var logoutAuth0Btn = document.getElementById('btn-logout-auth0');
 
   var homeViewBtn = document.getElementById('btn-home-view');
   var profileViewBtn = document.getElementById('btn-profile-view');
@@ -45,7 +46,8 @@ window.addEventListener('load', function() {
 
   loginBtn.addEventListener('click', login);
   renewBtn.addEventListener('click', renew);
-  logoutBtn.addEventListener('click', logout);
+  logoutLocallyBtn.addEventListener('click', logoutLocally);
+  logoutAuth0Btn.addEventListener('click', logoutAuth0);
 
   homeViewBtn.addEventListener('click', function() {
     homeView.style.display = 'inline-block';
@@ -99,11 +101,12 @@ window.addEventListener('load', function() {
           //displayButtons(); TODO MALCAIDE comprobar si es necesario o no
       } else if (result) {
           saveAuthResult(result);
+          window.location.hash = ''; // remove access_token hash
       }
   });
 
   function saveAuthResult (authResult) {
-      setSession(authResult);
+      setLocalSession(authResult);
       displayButtons();
   }
 
@@ -111,7 +114,7 @@ window.addEventListener('load', function() {
     renew();
   }
 
-  function setSession(authResult) {
+  function setLocalSession(authResult) {
     // Set the time that the access token will expire at
     var expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime()
@@ -121,14 +124,27 @@ window.addEventListener('load', function() {
     localStorage.setItem('expires_at', expiresAt);
   }
 
-  function logout() {
-    // Remove tokens and expiry time from localStorage
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('id_token');
-    localStorage.removeItem('expires_at');
-    localStorage.removeItem('profile');
+  function removeLocalSession() {
+      // Remove tokens and expiry time from localStorage
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('id_token');
+      localStorage.removeItem('expires_at');
+      localStorage.removeItem('profile');
+  }
+
+  function logoutLocally() {
+    removeLocalSession();
     pingMessage.style.display = 'none';
     displayButtons();
+  }
+
+  function logoutAuth0() {
+      removeLocalSession();
+
+      auth0js.logout({
+          client_id: AUTH0_CLIENT_ID,
+          returnTo: AUTH0_CALLBACK_URL
+      });
   }
 
   function isAuthenticated() {
@@ -150,10 +166,13 @@ window.addEventListener('load', function() {
 
       loginBtn.style.display = 'none';
       renewBtn.style.display = 'inline-block';
-      logoutBtn.style.display = 'inline-block';
+      logoutLocallyBtn.style.display = 'inline-block';
+      logoutAuth0Btn.style.display = 'inline-block';
       if(isExpired()){
           loginStatus.innerHTML = `You are logged in! You can now view your admin area.
-                         <br><br>There is an expired access token in local storage. Click RENEW button to renew it</a>`;
+                         <br><br>There is an expired access token in local storage. Click RENEW button to renew it</a>
+                         <br><br>- Log Out (locally): clear local storage</li>
+                         <br><br>- Log Out (Auth0): clear local storage + clear Auth0 session</li>`;
       } else {
           loginStatus.innerHTML = `You are logged in! You can now view your admin area.
                          <br><br>There is an access token in local storage, and it expires on ${expirationDate}. Click RENEW button to renew it</a>`;
@@ -169,7 +188,8 @@ window.addEventListener('load', function() {
     } else {
       loginBtn.style.display = 'inline-block';
       renewBtn.style.display = 'none';
-      logoutBtn.style.display = 'none';
+      logoutLocallyBtn.style.display = 'none';
+      logoutAuth0Btn.style.display = 'none';
       profileViewBtn.style.display = 'none';
       profileView.style.display = 'none';
       adminViewBtn.style.display = 'none';
