@@ -52,6 +52,7 @@ window.addEventListener('load', function() {
     profileView.style.display = 'none';
     adminView.style.display = 'none';
     pingView.style.display = 'none';
+    displayButtons()
   });
 
   profileViewBtn.addEventListener('click', function() {
