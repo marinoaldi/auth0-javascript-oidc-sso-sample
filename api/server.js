@@ -41,5 +41,6 @@ app.get('/api/private/admin', authenticate, authorize, function(req, res) {
   res.json({ message: "Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this." });
 });
 
-app.listen(3001);
-console.log('Listening on http://localhost:3001');
+var port = process.env.PORT || 3090;
+app.listen(port);
+console.log('Listening on http://localhost:'+port);

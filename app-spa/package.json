@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.html",
   "scripts": {
-    "start": "serve -p 3000"
+    "start": "serve -p 3091"
   },
   "author": "Auth0",
   "license": "MIT",
