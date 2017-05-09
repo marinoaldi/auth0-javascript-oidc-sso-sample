@@ -1,4 +1,4 @@
-# Auth0 Vanilla Javascript - OIDC Single Sign-on Sample / Authorization
+# Auth0 Vanilla Javascript - OIDC Single Sign-on Sample / Authorization (Silent Authentication) 
 
 This sample is a mix of:
 - [OIDC Single Sign-on Sample](https://github.com/auth0-samples/oidc-sso-sample)
@@ -13,14 +13,15 @@ In this example, we have 3 applications:
 * _[To-Do] app-mpa (vanilla Multi-Page App) http://localhost:3092_
 
 
-![Home Screen - Signed Out](/screen-home-signed-out.png?raw=true)
 _Home Screen - Signed Out_
+![Home Screen - Signed Out](/screen-home-signed-out.png?raw=true)
 
-![Home Screen - Signed In](/screen-home-signed-in.png?raw=true)
 _Home Screen - Signed In_
+![Home Screen - Signed In](/screen-home-signed-in.png?raw=true)
 
-![API Call](/screen-api-call.png?raw=true)
 _API Call_
+![API Call](/screen-api-call.png?raw=true)
+
 
 ## Installation Steps
 
