@@ -2,7 +2,7 @@ node_modules/
 npm-debug.log
 
 .env
-app-spa/auth0-variables.js
+auth0-variables.js
 
 .DS_Store
 

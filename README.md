@@ -8,9 +8,9 @@ This sample is a mix of:
 
 In this example, we have 3 applications:
 
-* api (API Express server) http://localhost:3090
-* app-spa (vanilla Single-Page App) http://localhost:3091
-* _[To-Do] app-mpa (vanilla Multi-Page App) http://localhost:3092_
+* **api:** API Express server - http://localhost:3090
+* **app-spa:** vanilla Single-Page App - http://localhost:3091
+* **app-mpa:** vanilla Multi-Page App - http://localhost:3092 _[In Progress]_
 
 
 _Home Screen - Signed Out_

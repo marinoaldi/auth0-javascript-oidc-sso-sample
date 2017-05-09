@@ -1,0 +1,16 @@
+{
+  "name": "app-mpa",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve -p 3092"
+  },
+  "author": "Auth0",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jwt-decode": "^2.1.0",
+    "serve": "^3.4.1"
+  }
+}
