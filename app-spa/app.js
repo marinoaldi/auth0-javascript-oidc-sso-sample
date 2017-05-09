@@ -175,7 +175,9 @@ window.addEventListener('load', function() {
                          <br><br>- Log Out (Auth0): clear local storage + clear Auth0 session</li>`;
       } else {
           loginStatus.innerHTML = `You are logged in! You can now view your admin area.
-                         <br><br>There is an access token in local storage, and it expires on ${expirationDate}. Click RENEW button to renew it</a>`;
+                         <br><br>There is an access token in local storage, and it expires on ${expirationDate}. Click RENEW button to renew it</a>
+                         <br><br>- Log Out (locally): clear local storage</li>
+                         <br><br>- Log Out (Auth0): clear local storage + clear Auth0 session</li>`;
       }
       profileViewBtn.style.display = 'inline-block';
       pingPrivate.style.display = 'inline-block';
