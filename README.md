@@ -4,13 +4,46 @@ This sample is a mix of:
 - [OIDC Single Sign-on Sample](https://github.com/auth0-samples/oidc-sso-sample)
 - [Auth0 JavaScript Authorization](https://github.com/auth0-samples/auth0-javascript-samples/tree/master/05-Authorization)
 
+## Structure
+
+In this example, we have 3 applications:
+
+* api (API Express server) http://localhost:3090
+* app-spa (vanilla Single-Page App) http://localhost:3091
+* _[To-Do] app-mpa (vanilla Multi-Page App) http://localhost:3092_
+
+
+![Home Screen - Signed Out](/screen-home-signed-out.png?raw=true)
+_Home Screen - Signed Out_
+
+![Home Screen - Signed In](/screen-home-signed-in.png?raw=true)
+_Home Screen - Signed In_
+
+![API Call](/screen-api-call.png?raw=true)
+_API Call_
+
+## Installation Steps
+
+Clone repository.
+
+```bash
+git clone https://github.com/marinoaldi/auth0-javascript-oidc-sso-sample.git
+```
+
+Run the following commands: 
+
+```bash
+cd auth0-javascript-oidc-sso-sample
+npm install
+npm start
+```
 
 # OIDC Single Sign-on Sample https://github.com/auth0-samples/oidc-sso-sample
 
 ## Prerequisites
 
 1. Go to https://manage.auth0.com/#/clients and create a single-page application client with OIDC Conformant mode enabled
-2. Add `http://localhost:3000` and `http://localhost:3000/callback.html` as allowed callback URLs
+2. Add `http://localhost:3000` and `http://localhost:3000/callback-silent.html` as allowed callback URLs
 3. Enter your Auth0 domain and client ID in the [`auth0-variables.js`](/app-spa/auth0-variables.js) file.
 
 ## Running the sample
