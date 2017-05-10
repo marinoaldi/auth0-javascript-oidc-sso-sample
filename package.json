@@ -1,13 +1,13 @@
 {
-  "name": "authorization",
+  "name": "auth0-javascript-oidc-sso-sample",
   "version": "0.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "",
   "scripts": {
     "postinstall": "npm-run-all --serial server-install client-spa-install client-mpa-install",
     "start": "npm-run-all --parallel server-start client-spa-start client-mpa-start",
-    "server-install": "cd api && npm install",
-    "server-start": "cd api && npm start",
+    "server-install": "cd server-api && npm install",
+    "server-start": "cd server-api && npm start",
     "client-spa-install": "cd app-spa && npm install",
     "client-spa-start": "cd app-spa && npm start",
     "client-mpa-install": "cd app-mpa && npm install",
