@@ -169,12 +169,12 @@ window.addEventListener('load', function() {
       logoutLocallyBtn.style.display = 'inline-block';
       logoutAuth0Btn.style.display = 'inline-block';
       if(isExpired()){
-          loginStatus.innerHTML = `You are logged in! You can now view your admin area.
+          loginStatus.innerHTML = `You are logged in! You can now send authenticated requests to your server.
                          <br><br>There is an expired access token in local storage. Click RENEW button to renew it</a>
                          <br><br>- Log Out (locally): clear local storage</li>
                          <br><br>- Log Out (Auth0): clear local storage + clear Auth0 session</li>`;
       } else {
-          loginStatus.innerHTML = `You are logged in! You can now view your admin area.
+          loginStatus.innerHTML = `You are logged in! You can now send authenticated requests to your server.
                          <br><br>There is an access token in local storage, and it expires on ${expirationDate}. Click RENEW button to renew it</a>
                          <br><br>- Log Out (locally): clear local storage</li>
                          <br><br>- Log Out (Auth0): clear local storage + clear Auth0 session</li>`;
