@@ -2,15 +2,18 @@
   "name": "app-mpa",
   "version": "0.0.0",
   "description": "",
-  "main": "index.html",
+  "main": "app.js",
   "scripts": {
     "start": "serve -p 3092"
   },
   "author": "Auth0",
   "license": "MIT",
   "dependencies": {
+    "auth0-js": "8.6.1",
     "bootstrap": "^3.3.7",
-    "jwt-decode": "^2.1.0",
-    "serve": "^3.4.1"
+    "jwt-decode": "^2.2.0"
+  },
+  "devDependencies": {
+    "serve": "^5.1.5"
   }
 }
