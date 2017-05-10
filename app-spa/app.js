@@ -84,34 +84,32 @@ window.addEventListener('load', function() {
         auth0js.renewAuth({
             redirectUri: AUTH0_CALLBACK_SILENT_URL,
             usePostMessage: true
-        }, function (err, result) {
+        }, function (err, authResult) {
             if (err) {
                 alert(`Could not get a new token using silent authentication (${err.error}). Redirecting to login page...`);
                 auth0js.authorize();
             } else {
-                saveAuthResult(result);
+                setLocalSession(authResult);
+                displayButtons();
             }
         });
     }
 
-    auth0js.parseHash(window.location.hash, function (err, result) {
-        if (err) {
-            console.error(err);
-            alert('Error: ' + error);
-            //displayButtons(); TODO MALCAIDE comprobar si es necesario o no
-        } else if (result) {
-            saveAuthResult(result);
-            window.location.hash = ''; // remove access_token hash
-        }
-    });
-
-    function saveAuthResult (authResult) {
-        setLocalSession(authResult);
-        displayButtons();
-    }
-
-    function login() {
-        renew();
+    function handleAuthentication() {
+        auth0js.parseHash(window.location.hash, function(err, authResult) {
+            if (authResult /*&& authResult.accessToken && authResult.idToken*/) {
+                window.location.hash = ''; // remove access_token hash
+                setLocalSession(authResult);
+                displayButtons();
+            } else if (err) {
+                homeView.style.display = 'inline-block';
+                console.log(err);
+                alert(
+                    'Error: ' + err.error + '. Check the console for further details.'
+                );
+            }
+            displayButtons();
+        });
     }
 
     function setLocalSession(authResult) {
@@ -130,6 +128,10 @@ window.addEventListener('load', function() {
         localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
         localStorage.removeItem('profile');
+    }
+
+    function login() {
+        renew();
     }
 
     function logoutLocally() {
@@ -272,5 +274,6 @@ window.addEventListener('load', function() {
         return getRole() === 'admin';
     }
 
-    displayButtons();
+
+    handleAuthentication();
 });
