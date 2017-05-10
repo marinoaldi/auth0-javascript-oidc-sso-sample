@@ -2,7 +2,7 @@
 
 This sample is a mix of:
 - [OIDC Single Sign-on Sample](https://github.com/auth0-samples/oidc-sso-sample)
-- [Auth0 JavaScript Authorization](https://github.com/auth0-samples/auth0-javascript-samples/tree/master/05-Authorization)
+- [Auth0 JavaScript Samples - 04-Calling-an-API](https://github.com/auth0-samples/auth0-javascript-samples)
 
 ## Structure
 
