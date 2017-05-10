@@ -258,7 +258,7 @@ window.addEventListener('load', function() {
                 ).message;
             } else {
                 document.querySelector('#ping-view h2').innerHTML = xhr.statusText + " - Maybe access_token expired. Renew it!!"
-                alert('Request failed: ' + xhr.statusCode + ' - '+ xhr.statusText);
+                alert('Request failed: ' + xhr.status + ' - '+ xhr.statusText);
             }
         };
         xhr.send();
