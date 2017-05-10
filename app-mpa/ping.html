@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Auth0 - JavaScript (MPA)</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="loading">
+  <img src="assets/loading.svg" alt="Loading spinner">
+</div>
+
+<div class="content">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Auth0 - JavaScript (MPA)</a>
+
+        <a id="btn-home-view" class="btn btn-primary btn-margin" href="/">
+          Home
+        </a>
+
+        <a id="btn-profile-view" class="btn btn-primary btn-margin" href="/profile.html">
+          Profile
+        </a>
+
+        <a id="btn-admin-view" class="btn btn-primary btn-margin" href="/admin.html">
+          Admin Area
+        </a>
+
+        <a id="btn-ping-view" class="btn btn-primary btn-margin" href="/ping.html">
+          Ping
+        </a>
+
+        <button id="btn-login" class="btn btn-success btn-margin">
+          Log In
+        </button>
+
+        <button id="btn-renew" class="btn btn-warning btn-margin">
+          Renew
+        </button>
+
+        <button id="btn-logout-locally" class="btn btn-danger btn-margin">
+          Log Out (locally)
+        </button>
+
+        <button id="btn-logout-auth0" class="btn btn-danger btn-margin">
+          Log Out (Auth0)
+        </button>
+
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- status view -->
+    <div id="status-view">
+      <h4></h4>
+    </div>
+
+    <!-- main content view -->
+    <div id="content-view">
+      <h1>Make a Call to the Server</h1>
+
+      <p id="call-private-message">
+        Log in to call a private (secured) server endpoint.
+      </p>
+
+      <button id="btn-ping-public" class="btn btn-primary">
+        Call Public
+      </button>
+
+      <button id="btn-ping-private" class="btn btn-primary">
+        Call Private
+      </button>
+
+      <h2 id="ping-message"></h2>
+    </div>
+  </main>
+</div>
+
+<script src="node_modules/auth0-js/build/auth0.js"></script>
+<script src="node_modules/jwt-decode/build/jwt-decode.js"></script>
+<script src="auth0-variables.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

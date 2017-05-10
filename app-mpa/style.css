@@ -6,9 +6,7 @@
   margin-top: 7px
 }
 
-#profile-view,
-#ping-view,
-#admin-view {
+#content-view {
   display: none;
 }
 

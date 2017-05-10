@@ -14,10 +14,9 @@ window.addEventListener('load', function() {
     }
 
 
-    var homeView = document.getElementById('home-view');
-    var profileView = document.getElementById('profile-view');
-    var pingView = document.getElementById('ping-view');
-    var adminView = document.getElementById('admin-view');
+    var statusView = document.getElementById('status-view');
+    var contentView = document.getElementById('content-view');
+
 
     // buttons and event listeners
     var loginBtn = document.getElementById('btn-login');
@@ -30,54 +29,11 @@ window.addEventListener('load', function() {
     var pingViewBtn = document.getElementById('btn-ping-view');
     var adminViewBtn = document.getElementById('btn-admin-view');
 
-    var pingPublic = document.getElementById('btn-ping-public');
-    var pingPrivate = document.getElementById('btn-ping-private');
-
-    var callPrivateMessage = document.getElementById('call-private-message');
-    var pingMessage = document.getElementById('ping-message');
-
-    pingPublic.addEventListener('click', function() {
-        callAPI('/public', false);
-    });
-
-    pingPrivate.addEventListener('click', function() {
-        callAPI('/private', true);
-    });
 
     loginBtn.addEventListener('click', login);
     renewBtn.addEventListener('click', renew);
     logoutLocallyBtn.addEventListener('click', logoutLocally);
     logoutAuth0Btn.addEventListener('click', logoutAuth0);
-
-    homeViewBtn.addEventListener('click', function() {
-        homeView.style.display = 'inline-block';
-        profileView.style.display = 'none';
-        adminView.style.display = 'none';
-        pingView.style.display = 'none';
-        displayButtons()
-    });
-
-    profileViewBtn.addEventListener('click', function() {
-        homeView.style.display = 'none';
-        pingView.style.display = 'none';
-        adminView.style.display = 'none';
-        profileView.style.display = 'inline-block';
-        getProfile();
-    });
-
-    pingViewBtn.addEventListener('click', function() {
-        homeView.style.display = 'none';
-        profileView.style.display = 'none';
-        adminView.style.display = 'none';
-        pingView.style.display = 'inline-block';
-    });
-
-    adminViewBtn.addEventListener('click', function() {
-        homeView.style.display = 'none';
-        profileView.style.display = 'none';
-        pingView.style.display = 'none';
-        adminView.style.display = 'inline-block';
-    });
 
 
     function renew() {
@@ -90,7 +46,7 @@ window.addEventListener('load', function() {
                 auth0js.authorize();
             } else {
                 setLocalSession(authResult);
-                displayButtons();
+                displayPage();
             }
         });
     }
@@ -100,15 +56,14 @@ window.addEventListener('load', function() {
             if (authResult /*&& authResult.accessToken && authResult.idToken*/) {
                 window.location.hash = ''; // remove access_token hash
                 setLocalSession(authResult);
-                displayButtons();
             } else if (err) {
-                homeView.style.display = 'inline-block';
+                statusView.style.display = 'inline-block';
                 console.log(err);
                 alert(
                     'Error: ' + err.error + '. Check the console for further details.'
                 );
             }
-            displayButtons();
+            displayPage();
         });
     }
 
@@ -136,13 +91,11 @@ window.addEventListener('load', function() {
 
     function logoutLocally() {
         removeLocalSession();
-        pingMessage.style.display = 'none';
-        displayButtons();
+        displayPage();
     }
 
     function logoutAuth0() {
         removeLocalSession();
-
         auth0js.logout({
             client_id: AUTH0_CLIENT_ID,
             returnTo: AUTH0_CALLBACK_URL
@@ -161,16 +114,16 @@ window.addEventListener('load', function() {
         return expiresAt < new Date().getTime();
     }
 
-    function displayButtons() {
-        var loginStatus = document.querySelector('.container h4');
-        if (isAuthenticated()) {
-            const expirationDate = new Date(Number.parseInt(localStorage.getItem('expires_at')));
+    function displayPage() {
+        displayButtons();
 
-            loginBtn.style.display = 'none';
-            renewBtn.style.display = 'inline-block';
-            logoutLocallyBtn.style.display = 'inline-block';
-            logoutAuth0Btn.style.display = 'inline-block';
+        var currentLocation = window.location.pathname;
+        var loginStatus = document.querySelector('.container h4');
+
+        if(isAuthenticated() && (currentLocation === "/" || currentLocation === "/index.html")){
+
             if(isExpired()){
+                const expirationDate = new Date(Number.parseInt(localStorage.getItem('expires_at')));
                 loginStatus.innerHTML = `You are logged in! You can now view your profile area and send authenticated requests to your server.
                          <br><br>There is an expired access token in local storage. Click RENEW button to renew it</a>
                          <br><br>- Log Out (locally): clear local storage</li>
@@ -181,9 +134,50 @@ window.addEventListener('load', function() {
                          <br><br>- Log Out (locally): clear local storage</li>
                          <br><br>- Log Out (Auth0): clear local storage + clear Auth0 session</li>`;
             }
+            statusView.style.display = 'inline-block';
+        } else if(isAuthenticated() && currentLocation === "/profile.html") {
+            getProfile();
+            contentView.style.display = 'inline-block';
+
+        } else if(currentLocation === "/ping.html") {
+            var pingPublic = document.getElementById('btn-ping-public');
+            var pingPrivate = document.getElementById('btn-ping-private');
+
+            var callPrivateMessage = document.getElementById('call-private-message');
+            var pingMessage = document.getElementById('ping-message');
+
+            pingPublic.addEventListener('click', function() {
+                callAPI('/public', false);
+            });
+
+            pingPrivate.addEventListener('click', function() {
+                callAPI('/private', true);
+            });
+
+            contentView.style.display = 'inline-block';
+            if (isAuthenticated()) {
+                pingPrivate.style.display = 'inline-block';
+                callPrivateMessage.style.display = 'none';
+            } else {
+                pingPrivate.style.display = 'none';
+                callPrivateMessage.style.display = 'block';
+            }
+        } else {
+            loginStatus.innerHTML = 'You are not logged in! Please log in to continue.' +
+                '<br><br>There is no access token present in local storage, meaning that you are not logged in. Click LOGIN button to attempt an SSO login';
+            statusView.style.display = 'inline-block';
+        }
+    }
+
+
+
+    function displayButtons() {
+        if (isAuthenticated()) {
+            loginBtn.style.display = 'none';
+            renewBtn.style.display = 'inline-block';
+            logoutLocallyBtn.style.display = 'inline-block';
+            logoutAuth0Btn.style.display = 'inline-block';
             profileViewBtn.style.display = 'inline-block';
-            pingPrivate.style.display = 'inline-block';
-            callPrivateMessage.style.display = 'none';
             if (isAdmin()) {
                 adminViewBtn.style.display = 'inline-block';
             } else {
@@ -195,13 +189,7 @@ window.addEventListener('load', function() {
             logoutLocallyBtn.style.display = 'none';
             logoutAuth0Btn.style.display = 'none';
             profileViewBtn.style.display = 'none';
-            profileView.style.display = 'none';
             adminViewBtn.style.display = 'none';
-            adminView.style.display = 'none';
-            pingPrivate.style.display = 'none';
-            callPrivateMessage.style.display = 'block';
-            loginStatus.innerHTML = 'You are not logged in! Please log in to continue.' +
-                '<br><br>There is no access token present in local storage, meaning that you are not logged in. Click LOGIN button to attempt an SSO login';
         }
     }
 
@@ -232,13 +220,9 @@ window.addEventListener('load', function() {
 
     function displayProfile(userProfile) {
         // display the profile
-        document.querySelector(
-            '#profile-view .nickname'
-        ).innerHTML = userProfile.nickname;
-        document.querySelector(
-            '#profile-view .full-profile'
-        ).innerHTML = JSON.stringify(userProfile, null, 2);
-        document.querySelector('#profile-view img').src = userProfile.picture;
+        document.querySelector('#content-view .nickname').innerHTML = userProfile.nickname;
+        document.querySelector('#content-view .full-profile').innerHTML = JSON.stringify(userProfile, null, 2);
+        document.querySelector('#content-view img').src = userProfile.picture;
     }
 
     function callAPI(endpoint, secured) {
@@ -253,11 +237,11 @@ window.addEventListener('load', function() {
         }
         xhr.onload = function() {
             if (xhr.status == 200) {
-                document.querySelector('#ping-view h2').innerHTML = JSON.parse(
+                document.querySelector('#content-view h2').innerHTML = JSON.parse(
                     xhr.responseText
                 ).message;
             } else {
-                document.querySelector('#ping-view h2').innerHTML = xhr.statusText + " - Maybe access_token expired. Renew it!!"
+                document.querySelector('#content-view h2').innerHTML = xhr.statusText + " - Maybe access_token expired. Renew it!!"
                 alert('Request failed: ' + xhr.status + ' - '+ xhr.statusText);
             }
         };

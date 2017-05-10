@@ -100,7 +100,6 @@ window.addEventListener('load', function() {
             if (authResult /*&& authResult.accessToken && authResult.idToken*/) {
                 window.location.hash = ''; // remove access_token hash
                 setLocalSession(authResult);
-                displayButtons();
             } else if (err) {
                 homeView.style.display = 'inline-block';
                 console.log(err);
@@ -136,13 +135,11 @@ window.addEventListener('load', function() {
 
     function logoutLocally() {
         removeLocalSession();
-        pingMessage.style.display = 'none';
         displayButtons();
     }
 
     function logoutAuth0() {
         removeLocalSession();
-
         auth0js.logout({
             client_id: AUTH0_CLIENT_ID,
             returnTo: AUTH0_CALLBACK_URL
