@@ -204,38 +204,29 @@ window.addEventListener('load', function() {
     }
 
     function getProfile() {
-        var userProfile = localStorage.getItem('profile');
+        var accessToken = localStorage.getItem('access_token');
 
-        if (!userProfile) {
-            var accessToken = localStorage.getItem('access_token');
-
-            if (!accessToken) {
-                console.log('Access token must exist to fetch profile');
-                alert('Access token must exist to fetch profile');
-            }
-
-            auth0js.client.userInfo(accessToken, function(err, user) {
-                if (err) {
-                    console.log('There was an error getting the userInfo: ' + JSON.stringify(err));
-                    console.log(err);
-                    alert('There was an error getting the userInfo: ' + JSON.stringify(err));
-                    /*
-                     if(err.code === 401) { // Unauthorized (Maybe access_token expired) TODO MALCAIDE comprobar si es necesario o no
-                     renewAuthorizeAPI();
-                     } else {
-                     logout();
-                     }*/
-                } else {
-                    // Now you have the user's information
-                    localStorage.setItem('profile', JSON.stringify(user));
-                    displayProfile(user);
-                }
-            });
-
-        } else {
-            displayProfile(JSON.parse(userProfile));
+        if(!accessToken) {
+            console.log('Access token must exist to fetch profile');
+            alert('Access token must exist to fetch profile');
+        } else if(isExpired()){
+            console.log('Access token is expired, it must not expired to fetch profile');
+            alert('Access token is expired, it must not expired to fetch profile');
         }
+
+        auth0js.client.userInfo(accessToken, function(err, profile) {
+            if (err) {
+                console.log('There was an error getting the userInfo: ' + JSON.stringify(err));
+                console.log(err);
+                alert('There was an error getting the userInfo: ' + err.statusCode + ' - ' + err.statusText);
+            } else {
+                // Now you have the user's information
+                localStorage.setItem('profile', JSON.stringify(profile));
+                displayProfile(profile);
+            }
+        });
     }
+
 
     function displayProfile(userProfile) {
         // display the profile
@@ -265,7 +256,7 @@ window.addEventListener('load', function() {
                 ).message;
             } else {
                 document.querySelector('#ping-view h2').innerHTML = xhr.statusText + " - Maybe access_token expired. Renew it!!"
-                alert('Request failed: ' + xhr.statusText);
+                alert('Request failed: ' + xhr.statusCode + ' - '+ xhr.statusText);
             }
         };
         xhr.send();
