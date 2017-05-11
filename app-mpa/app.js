@@ -123,12 +123,12 @@ window.addEventListener('load', function() {
         if(isAuthenticated() && (currentLocation === "/" || currentLocation === "/index.html")){
 
             if(isExpired()){
-                const expirationDate = new Date(Number.parseInt(localStorage.getItem('expires_at')));
                 loginStatus.innerHTML = `You are logged in! You can now view your profile area and send authenticated requests to your server.
                          <br><br>There is an expired access token in local storage. Click RENEW button to renew it</a>
                          <br><br>- Log Out (locally): clear local storage</li>
                          <br><br>- Log Out (Auth0): clear local storage + clear Auth0 session</li>`;
             } else {
+                const expirationDate = new Date(Number.parseInt(localStorage.getItem('expires_at')));
                 loginStatus.innerHTML = `You are logged in! You can now view your profile area and send authenticated requests to your server.
                          <br><br>There is an access token in local storage, and it expires on ${expirationDate}. Click RENEW button to renew it</a>
                          <br><br>- Log Out (locally): clear local storage</li>
