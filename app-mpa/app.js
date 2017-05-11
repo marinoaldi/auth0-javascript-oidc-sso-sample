@@ -82,7 +82,7 @@ window.addEventListener('load', function() {
         removeLocalSession();
         auth0js.logout({
             client_id: AUTH0_CLIENT_ID,
-            returnTo: AUTH0_CALLBACK_URL
+            returnTo: AUTH0_LOGOUT_URL
         });
     }
 
@@ -145,6 +145,14 @@ window.addEventListener('load', function() {
             } else {
                 pingPrivate.style.display = 'none';
                 callPrivateMessage.style.display = 'block';
+            }
+        } else if(currentLocation === "/logout.html") {
+            if (isAuthenticated()) {
+                loginStatus.innerHTML = "You are still logged in! If you want to log out click on 'Log Out (locally)' or 'Log Out (Auth0)'";
+                contentView.style.display = 'none';
+            } else {
+                loginStatus.innerHTML = '';
+                contentView.style.display = 'inline-block';
             }
         } else {
             loginStatus.innerHTML = 'You are not logged in! Please log in to continue.' +

@@ -4,6 +4,7 @@ const AUTH0_CLIENT_ID='{CLIENT_ID}';
 const AUTH0_DOMAIN='{DOMAIN}';
 const AUTH0_CALLBACK_URL=CLIENT_SERVER_URL+'/callback.html';
 const AUTH0_CALLBACK_SILENT_URL=CLIENT_SERVER_URL+'/callback-silent.html';
+const AUTH0_LOGOUT_URL=CLIENT_SERVER_URL+'/logout.html';
 const API_ID = '{AUDIENCE}';
 const API_URL = location.protocol+'//'+location.hostname+':3090/api';
 
