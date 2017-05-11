@@ -5,7 +5,7 @@
 1. Go to https://manage.auth0.com/#/clients and create a single-page application client with OIDC Conformant mode enabled
 2. Add `http://localhost:3092/callback.html` and `http://localhost:3092/callback-silent.html` as **Allowed Callback URLs**
 3. Add `http://localhost:3092/logout.html` as **Allowed Logout URLs**
-4. Enter your Auth0 domain and client ID in the [`auth0-variables.js`](/app-spa/auth0-variables.js) file.
+4. Enter your Auth0 domain and client ID in the [`auth0-variables.js`](auth0-variables.js.example) file.
 5. Configure [your API server](/server-api#getting-started)
 
 
