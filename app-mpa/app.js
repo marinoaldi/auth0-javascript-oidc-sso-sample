@@ -51,22 +51,6 @@ window.addEventListener('load', function() {
         });
     }
 
-    function handleAuthentication() {
-        auth0js.parseHash(window.location.hash, function(err, authResult) {
-            if (authResult /*&& authResult.accessToken && authResult.idToken*/) {
-                window.location.hash = ''; // remove access_token hash
-                setLocalSession(authResult);
-            } else if (err) {
-                statusView.style.display = 'inline-block';
-                console.log(err);
-                alert(
-                    'Error: ' + err.error + '. Check the console for further details.'
-                );
-            }
-            displayPage();
-        });
-    }
-
     function setLocalSession(authResult) {
         // Set the time that the access token will expire at
         var expiresAt = JSON.stringify(
@@ -259,5 +243,5 @@ window.addEventListener('load', function() {
     }
 
 
-    handleAuthentication();
+    displayPage();
 });
