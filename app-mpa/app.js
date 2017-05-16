@@ -36,6 +36,10 @@ window.addEventListener('load', function() {
     logoutAuth0Btn.addEventListener('click', logoutAuth0);
 
 
+    function login() {
+        renew();
+    }
+
     function renew() {
         auth0js.renewAuth({
             redirectUri: AUTH0_CALLBACK_SILENT_URL,
@@ -48,6 +52,19 @@ window.addEventListener('load', function() {
                 setLocalSession(authResult);
                 displayPage();
             }
+        });
+    }
+
+    function logoutLocally() {
+        removeLocalSession();
+        displayPage();
+    }
+
+    function logoutAuth0() {
+        removeLocalSession();
+        auth0js.logout({
+            client_id: AUTH0_CLIENT_ID,
+            returnTo: AUTH0_LOGOUT_URL
         });
     }
 
@@ -67,23 +84,6 @@ window.addEventListener('load', function() {
         localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
         localStorage.removeItem('profile');
-    }
-
-    function login() {
-        renew();
-    }
-
-    function logoutLocally() {
-        removeLocalSession();
-        displayPage();
-    }
-
-    function logoutAuth0() {
-        removeLocalSession();
-        auth0js.logout({
-            client_id: AUTH0_CLIENT_ID,
-            returnTo: AUTH0_LOGOUT_URL
-        });
     }
 
     function isAuthenticated() {
@@ -160,8 +160,6 @@ window.addEventListener('load', function() {
             statusView.style.display = 'inline-block';
         }
     }
-
-
 
     function displayButtons() {
         if (isAuthenticated()) {

@@ -79,6 +79,25 @@ window.addEventListener('load', function() {
         adminView.style.display = 'inline-block';
     });
 
+    function handleAuthentication() {
+        auth0js.parseHash(window.location.hash, function(err, authResult) {
+            if (authResult /*&& authResult.accessToken && authResult.idToken*/) {
+                window.location.hash = ''; // remove access_token hash
+                setLocalSession(authResult);
+            } else if (err) {
+                homeView.style.display = 'inline-block';
+                console.log(err);
+                alert(
+                    'Error: ' + err.error + '. Check the console for further details.'
+                );
+            }
+            displayButtons();
+        });
+    }
+
+    function login() {
+        renew();
+    }
 
     function renew() {
         auth0js.renewAuth({
@@ -95,19 +114,16 @@ window.addEventListener('load', function() {
         });
     }
 
-    function handleAuthentication() {
-        auth0js.parseHash(window.location.hash, function(err, authResult) {
-            if (authResult /*&& authResult.accessToken && authResult.idToken*/) {
-                window.location.hash = ''; // remove access_token hash
-                setLocalSession(authResult);
-            } else if (err) {
-                homeView.style.display = 'inline-block';
-                console.log(err);
-                alert(
-                    'Error: ' + err.error + '. Check the console for further details.'
-                );
-            }
-            displayButtons();
+    function logoutLocally() {
+        removeLocalSession();
+        displayButtons();
+    }
+
+    function logoutAuth0() {
+        removeLocalSession();
+        auth0js.logout({
+            client_id: AUTH0_CLIENT_ID,
+            returnTo: AUTH0_CALLBACK_URL
         });
     }
 
@@ -127,23 +143,6 @@ window.addEventListener('load', function() {
         localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
         localStorage.removeItem('profile');
-    }
-
-    function login() {
-        renew();
-    }
-
-    function logoutLocally() {
-        removeLocalSession();
-        displayButtons();
-    }
-
-    function logoutAuth0() {
-        removeLocalSession();
-        auth0js.logout({
-            client_id: AUTH0_CLIENT_ID,
-            returnTo: AUTH0_CALLBACK_URL
-        });
     }
 
     function isAuthenticated() {
