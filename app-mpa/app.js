@@ -126,6 +126,7 @@ window.addEventListener('load', function() {
         } else if(currentLocation === "/ping.html") {
             var pingPublic = document.getElementById('btn-ping-public');
             var pingPrivate = document.getElementById('btn-ping-private');
+            var pingPrivateScopes = document.getElementById('btn-ping-private-scopes');
 
             var callPrivateMessage = document.getElementById('call-private-message');
             var pingMessage = document.getElementById('ping-message');
@@ -138,12 +139,18 @@ window.addEventListener('load', function() {
                 callAPI('/private', true);
             });
 
+            pingPrivateScopes.addEventListener('click', function() {
+                callAPI('/private/admin', true);
+            });
+
             contentView.style.display = 'inline-block';
             if (isAuthenticated()) {
                 pingPrivate.style.display = 'inline-block';
+                pingPrivateScopes.style.display = 'inline-block';
                 callPrivateMessage.style.display = 'none';
             } else {
                 pingPrivate.style.display = 'none';
+                pingPrivateScopes.style.display = 'none';
                 callPrivateMessage.style.display = 'block';
             }
         } else if(currentLocation === "/logout.html") {
@@ -231,7 +238,13 @@ window.addEventListener('load', function() {
                     xhr.responseText
                 ).message;
             } else {
-                document.querySelector('#content-view h2').innerHTML = xhr.statusText + " - Maybe access_token expired. Renew it!!"
+                var extraInfo = "";
+                if (xhr.status == 401) {
+                    extraInfo += "<br><br>You are not logged in or maybe access_token expired. Renew it";
+                } else if (xhr.status == 403) {
+                    extraInfo += "<br><br>You need to be authenticated and have a scope of read:messages to see this";
+                }
+                document.querySelector('#content-view h2').innerHTML = xhr.status + ": " + xhr.statusText + extraInfo;
                 alert('Request failed: ' + xhr.status + ' - '+ xhr.statusText);
             }
         };

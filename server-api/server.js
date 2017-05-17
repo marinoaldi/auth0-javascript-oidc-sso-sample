@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const jwt = require('express-jwt');
-const jwtAuthz = require('express-jwt-authz');
 const jwksRsa = require('jwks-rsa');
 const cors = require('cors');
 require('dotenv').config();
@@ -27,7 +26,22 @@ const authenticate = jwt({
   algorithms: ['RS256']
 });
 
-const authorize = jwtAuthz([ 'read:messages' ]);
+// Middleware to check permissions (scopes)
+const authorize = function(req, res, next){
+    switch(req.path){
+        case '/api/private/admin':{
+            var permissions = ['read:messages'];
+            for(var i = 0; i < permissions.length; i++){
+                if(req.user.scope.includes(permissions[i])){
+                    next();
+                } else {
+                    res.status(403).send({message:'Forbidden'});
+                }
+            }
+            break;
+        }
+    }
+}
 
 app.get('/api/public', function(req, res) {
   res.json({ message: "Hello from a public endpoint! You don't need to be authenticated to see this." });

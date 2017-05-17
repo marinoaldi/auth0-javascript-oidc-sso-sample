@@ -4,6 +4,7 @@ This sample is a mix of:
 - **Auth0 JavaScript Samples** https://github.com/auth0-samples/auth0-javascript-samples
 - **OIDC Single Sign-on Sample** https://github.com/auth0-samples/oidc-sso-sample
 - **Auth0 Express API Samples** https://github.com/auth0-samples/auth0-express-api-samples
+- **auth0-api-auth-implicit-sample** https://github.com/auth0-samples/auth0-api-auth-implicit-sample
 
 This sample demonstrates how to:
 - Add **authentication** to a Javascript application with Auth0. The sample makes use of Auth0's hosted login page which provides centralized authentication.
